@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: emotions_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: emotions_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - emotions_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: emotions_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - emotions_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Facial Analysis Service
+  facial_service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.facial
+    container_name: facial_service
+    ports:
+      - "8001:8001"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - emotions_network
+    volumes:
+      - ./services/facial:/app/services/facial
+      - ./shared:/app/shared
+      - models_cache:/app/models_cache
+
+  # Voice Analysis Service
+  voice_service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.voice
+    container_name: voice_service
+    ports:
+      - "8002:8002"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - emotions_network
+    volumes:
+      - ./services/voice:/app/services/voice
+      - ./shared:/app/shared
+      - models_cache:/app/models_cache
+
+  # Text Analysis Service
+  text_service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.text
+    container_name: text_service
+    ports:
+      - "8003:8003"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - emotions_network
+    volumes:
+      - ./services/text:/app/services/text
+      - ./shared:/app/shared
+      - models_cache:/app/models_cache
+
+  # Fusion Service
+  fusion_service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.fusion
+    container_name: fusion_service
+    ports:
+      - "8004:8004"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - FACIAL_SERVICE_URL=http://facial_service:8001
+      - VOICE_SERVICE_URL=http://voice_service:8002
+      - TEXT_SERVICE_URL=http://text_service:8003
+    depends_on:
+      - redis
+      - facial_service
+      - voice_service
+      - text_service
+    networks:
+      - emotions_network
+    volumes:
+      - ./services/fusion:/app/services/fusion
+      - ./shared:/app/shared
+
+volumes:
+  postgres_data:
+  redis_data:
+  models_cache:
+
+networks:
+  emotions_network:
+    driver: bridge
