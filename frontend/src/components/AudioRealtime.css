@@ -1,0 +1,258 @@
+.audio-realtime-card {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.audio-realtime-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.audio-realtime-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #f093fb;
+}
+
+.audio-realtime-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  flex: 1;
+}
+
+.audio-realtime-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.recording-visualizer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+  border-radius: 15px;
+  min-height: 200px;
+}
+
+.recording-visualizer.active {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe5f5 100%);
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 147, 251, 0.3) 0%, transparent 70%);
+  animation: pulseRing 2s ease-out infinite;
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.mic-icon {
+  color: #f093fb;
+  z-index: 1;
+}
+
+.mic-icon.pulsing {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.status-text {
+  margin-top: 1rem;
+  color: #666;
+  font-weight: 500;
+  z-index: 1;
+}
+
+.audio-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-start-audio,
+.btn-stop-audio {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-start-audio {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.btn-start-audio:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(240, 147, 251, 0.4);
+}
+
+.btn-stop-audio {
+  background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+  color: white;
+}
+
+.btn-stop-audio:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(244, 67, 54, 0.4);
+}
+
+.audio-emotion-result {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f5f7ff 0%, #fff5f5 100%);
+  border-radius: 12px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-emoji-large {
+  font-size: 4rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-info {
+  flex: 1;
+}
+
+.result-emotion-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.result-confidence-bar {
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.confidence-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+  border-radius: 6px;
+}
+
+.result-confidence-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+}
+
+.analyzing-audio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 10px;
+  color: #666;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #f093fb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.audio-history {
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.audio-history h4 {
+  margin: 0 0 0.75rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.history-timeline {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.history-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.history-dot:hover {
+  transform: scale(1.3);
+}
+
+@media (max-width: 768px) {
+  .audio-emotion-result {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .result-emoji-large {
+    font-size: 3rem;
+  }
+}

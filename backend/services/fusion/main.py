@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
 from typing import Optional
@@ -19,6 +19,7 @@ from shared.schemas import (
 )
 from shared.config import get_settings
 from shared.utils import get_logger
+from websocket_handler import websocket_endpoint
 
 logger = get_logger()
 settings = get_settings()
@@ -224,6 +225,15 @@ async def analyze_multimodal(
         total_processing_time=total_time,
         timestamp=datetime.utcnow()
     )
+
+
+@app.websocket("/ws/realtime")
+async def websocket_realtime(websocket: WebSocket):
+    """
+    WebSocket endpoint para análisis en tiempo real
+    Permite streaming de frames de video y texto
+    """
+    await websocket_endpoint(websocket)
 
 
 if __name__ == "__main__":

@@ -22,6 +22,59 @@
   font-size: 1.1rem;
 }
 
+.mode-tabs {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.tab {
+  padding: 0.75rem 2rem;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #666;
+}
+
+.tab:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.realtime-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.realtime-bottom-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .realtime-bottom-section {
+    grid-template-columns: 1fr;
+  }
+}
+
 .app-main {
   flex: 1;
   padding: 2rem;

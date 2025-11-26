@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import ImageUpload from './components/ImageUpload';
 import AudioUpload from './components/AudioUpload';
 import TextInput from './components/TextInput';
+import TextInputRealtime from './components/TextInputRealtime';
+import AudioRealtime from './components/AudioRealtime';
 import ResultsDisplay from './components/ResultsDisplay';
+import RealtimeAnalysis from './components/RealtimeAnalysis';
+import { WebSocketProvider } from './context/WebSocketContext';
 import { analyzeMultimodal } from './services/api';
 import './App.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState('standard'); // 'standard' o 'realtime'
   const [image, setImage] = useState(null);
   const [audio, setAudio] = useState(null);
   const [text, setText] = useState('');
@@ -57,9 +62,26 @@ function App() {
       <header className="app-header">
         <h1>🎭 Reconocimiento Multimodal de Emociones</h1>
         <p>Analiza emociones a través de imagen facial, voz y texto usando IA</p>
+        
+        {/* Tabs */}
+        <div className="mode-tabs">
+          <button 
+            className={`tab ${activeTab === 'standard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('standard')}
+          >
+            📸 Modo Estándar
+          </button>
+          <button 
+            className={`tab ${activeTab === 'realtime' ? 'active' : ''}`}
+            onClick={() => setActiveTab('realtime')}
+          >
+            🎥 Tiempo Real
+          </button>
+        </div>
       </header>
 
-      <main className="app-main">
+      <main className="app-main">{activeTab === 'standard' ? (
+        <>
         <div className="upload-section">
           <div className="upload-grid">
             <ImageUpload image={image} onImageChange={setImage} />
@@ -100,6 +122,18 @@ function App() {
         {results && (
           <ResultsDisplay results={results} />
         )}
+        </>
+      ) : (
+        <WebSocketProvider>
+          <div className="realtime-mode">
+            <RealtimeAnalysis />
+            <div className="realtime-bottom-section">
+              <AudioRealtime />
+              <TextInputRealtime />
+            </div>
+          </div>
+        </WebSocketProvider>
+      )}
       </main>
 
       <footer className="app-footer">
